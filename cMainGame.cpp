@@ -22,7 +22,7 @@ cMainGame::~cMainGame()
 	Safe_Delete(m_pGrid);
 	Safe_Delete(m_pCubePC);
 	Safe_Delete(m_pCubeMan);
-	Safe_Delete(m_pTexture);
+	Safe_release(m_pTexture);
 	g_pDeviceManager->Destroy();
 }
 
@@ -78,10 +78,10 @@ void cMainGame::Render()
 	{
 		m_pGrid->Render();
 	}
-	/*if (m_pCubeMan)
+	if (m_pCubeMan)
 	{
 		m_pCubeMan->Render();
-	}*/
+	}
 	/*if (m_pCubePC)
 	{
 		m_pCubePC->Render();
@@ -89,7 +89,7 @@ void cMainGame::Render()
 	/*Draw_Line();
 	Draw_Triangle();*/
 
-	Draw_Texture();
+	//Draw_Texture();
 
 	g_pD3DDevice->EndScene();
 

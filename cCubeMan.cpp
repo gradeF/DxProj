@@ -11,12 +11,14 @@
 
 cCubeMan::cCubeMan()
 	:
-	m_pRoot(NULL)
+	m_pRoot(NULL),
+	m_pTexture(NULL)
 {
 }
 
 cCubeMan::~cCubeMan()
 {
+	Safe_release(m_pTexture);
 	if (m_pRoot)
 	{
 		m_pRoot->Destroy();
@@ -31,6 +33,8 @@ void cCubeMan::Setup()
 	m_stMt1.Ambient = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
 	m_stMt1.Diffuse = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
 	m_stMt1.Specular = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
+
+	D3DXCreateTextureFromFile(g_pD3DDevice, L"deadpool.png", &m_pTexture);
 
 	cBody* pBody = new cBody;
 	pBody->Setup();
@@ -75,7 +79,7 @@ void cCubeMan::Render()
 {
 	if (g_pD3DDevice)
 	{
-		g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
+		g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
 		g_pD3DDevice->SetMaterial(&m_stMt1);
 
 		cCharacter::Render();
@@ -83,8 +87,10 @@ void cCubeMan::Render()
 		D3DXMATRIXA16 matWorld;
 		D3DXMatrixIdentity(&matWorld);
 		g_pD3DDevice->SetTransform(D3DTS_WORLD, & m_matWorld);
+		g_pD3DDevice->SetTexture(0, m_pTexture);
 		if (m_pRoot)
 			m_pRoot->Render();
-		g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, true);
+		g_pD3DDevice->SetTexture(0, NULL);
+		g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
 	}
 }

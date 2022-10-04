@@ -22,6 +22,9 @@
     <Filter Include="CubeMan\source">
       <UniqueIdentifier>{ddb7c9a1-e452-41b1-a1c5-a286f682206a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Obj">
+      <UniqueIdentifier>{2475eb10-a3c4-44df-aa5c-a25085da2368}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -87,6 +90,21 @@
     <ClInclude Include="cRightLeg.h">
       <Filter>CubeMan\header</Filter>
     </ClInclude>
+    <ClInclude Include="cObject.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="cObjectManager.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="cTextureManager.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="cGroup.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
+    <ClInclude Include="cMtlTex.h">
+      <Filter>Obj</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxProj.cpp">
@@ -142,6 +160,21 @@
     </ClCompile>
     <ClCompile Include="cRightLeg.cpp">
       <Filter>CubeMan\source</Filter>
+    </ClCompile>
+    <ClCompile Include="cObject.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="cObjectManager.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="cTextureManager.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="cGroup.cpp">
+      <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="cMtlTex.cpp">
+      <Filter>Obj</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
