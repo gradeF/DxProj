@@ -17,7 +17,7 @@ void cGroup::Render()
 	if (m_pMtlTex)
 	{
 		g_pD3DDevice->SetTexture(0, m_pMtlTex->GetTexture());
-		g_pD3DDevice->SetMaterial(&m_pMtlTex->Get());
+		g_pD3DDevice->SetMaterial(&m_pMtlTex->GetMaterial());
 	}
 
 	g_pD3DDevice->SetFVF(ST_PNT_VERTEX::FVF);

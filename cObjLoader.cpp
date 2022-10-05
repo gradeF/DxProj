@@ -98,15 +98,95 @@ void cObjLoader::Load(OUT std::vector<cGroup*>& vecGroup, IN char* szFolder, IN 
 				v.p = vecV[nIndex[i][0] - 1];
 				v.t = vecVT[nIndex[i][1] - 1];
 				v.n = vecVN[nIndex[i][2] - 1];
+				vecVertex.push_back(v);
 			}
 		}
-		else if (szTemp[0] == 'm')
-		{
-		}
-		
 	}
+	fclose(fp);
+	for (auto it : m_mapMtlTex)
+	{
+		Safe_release(it.second);
+	}
+	m_mapMtlTex.clear();
 }
 
 void cObjLoader::LoadMtlLib(char* szFolder, char* szFile)
 {
+	std::string sFullPath(szFolder);
+	sFullPath += (std::string("/") + std::string(szFile));
+	FILE* fp;
+	fopen_s(&fp, sFullPath.c_str(), "r");
+
+	std::string sMtlName;
+
+	while (true)
+	{
+		if (feof(fp))
+		{
+			break;
+		}
+		char szTemp[1024];
+		fgets(szTemp, 1024, fp);
+		if (szTemp[0] == '#')
+		{
+			continue;
+		}
+		else if(szTemp[0] == 'n')
+		{
+			char szMtlName[1024];
+			sscanf_s(szTemp, "%*s %s", szMtlName, 1024);
+			sMtlName = std::string(szMtlName);
+			if (m_mapMtlTex.find(sMtlName) == m_mapMtlTex.end())
+			{
+				m_mapMtlTex[sMtlName] = new cMtlTex;
+			}
+		}
+		else if (szTemp[0] == 'K')
+		{
+			if(szTemp[1] == 'a')
+			{ 
+				float r, g, b;
+				sscanf_s(szTemp, "%*s %f %f %f", &r, &g, &b);
+				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.r = r;
+				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.g = g;
+				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.b = b;
+				m_mapMtlTex[sMtlName]->GetMaterial().Ambient.a = 0.1f;
+			}
+			else if(szTemp[1] == 'd')
+			{
+				float r, g, b;
+				sscanf_s(szTemp, "%*s %f %f %f", &r, &g, &b);
+				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.r = r;
+				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.g = g;
+				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.b = b;
+				m_mapMtlTex[sMtlName]->GetMaterial().Diffuse.a = 1.0f;
+			}
+			else if(szTemp[1] == 's')
+			{
+				float r, g, b;
+				sscanf_s(szTemp, "%*s %f %f %f", &r, &g, &b);
+				m_mapMtlTex[sMtlName]->GetMaterial().Specular.r = r;
+				m_mapMtlTex[sMtlName]->GetMaterial().Specular.g = g;
+				m_mapMtlTex[sMtlName]->GetMaterial().Specular.b = b;
+				m_mapMtlTex[sMtlName]->GetMaterial().Specular.a = 1.0f;
+			}
+		}
+		else if (szTemp[0] == 'd')
+		{
+			float d;
+			sscanf_s(szTemp, "%*s %f", &d);
+			m_mapMtlTex[sMtlName]->GetMaterial().Power = d;
+		}
+		else if (szTemp[0] == 'm')
+		{
+			char szTexFile[1024];
+			sscanf_s(szTemp, "%*s %s", szTexFile, 1024);
+			sFullPath = std::string(szFolder);
+			sFullPath += (std::string("/") + std::string(szTexFile));
+
+			LPDIRECT3DTEXTURE9 pTexture = g_pTextureManager->GetTexture(sFullPath);
+			m_mapMtlTex[sMtlName]->SetTexture(pTexture);
+		}
+	}
+	fclose(fp);
 }
