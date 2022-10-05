@@ -105,6 +105,9 @@
     <ClInclude Include="cMtlTex.h">
       <Filter>Obj</Filter>
     </ClInclude>
+    <ClInclude Include="cObjLoader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxProj.cpp">
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="cMtlTex.cpp">
       <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="cObjLoader.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
