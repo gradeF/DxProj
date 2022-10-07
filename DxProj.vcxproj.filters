@@ -25,6 +25,9 @@
     <Filter Include="Obj">
       <UniqueIdentifier>{2475eb10-a3c4-44df-aa5c-a25085da2368}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{c0e4ccbf-eb40-47c1-afa5-2ca41e2aef59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -108,6 +111,12 @@
     <ClInclude Include="cObjLoader.h">
       <Filter>Obj</Filter>
     </ClInclude>
+    <ClInclude Include="iMap.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="cObjMap.h">
+      <Filter>Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxProj.cpp">
@@ -181,6 +190,12 @@
     </ClCompile>
     <ClCompile Include="cObjLoader.cpp">
       <Filter>Obj</Filter>
+    </ClCompile>
+    <ClCompile Include="iMap.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="cObjMap.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

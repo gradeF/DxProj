@@ -7,7 +7,7 @@
 #include "cCubeMan.h"
 #include "cObjLoader.h"
 #include "cGroup.h"
-
+#include "cObjMap.h"
 
 cMainGame::cMainGame()
 	:
@@ -15,7 +15,8 @@ cMainGame::cMainGame()
 	m_pGrid(NULL),
 	m_pCamera(NULL),
 	m_pCubeMan(NULL),
-	m_pTexture(NULL)
+	m_pTexture(NULL),
+	m_pMap(NULL)
 {
 }
 
@@ -26,6 +27,7 @@ cMainGame::~cMainGame()
 	Safe_Delete(m_pCubePC);
 	Safe_Delete(m_pCubeMan);
 	Safe_release(m_pTexture);
+	Safe_Delete(m_pMap);
 
 	for (auto p : m_vecGroup)
 	{
@@ -58,6 +60,9 @@ void cMainGame::Setup()
 
 	Setup_Texture();
 	Setup_Obj();
+	
+	Setup_Map();
+	Setup_Surface();
 
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
 }
@@ -71,7 +76,7 @@ void cMainGame::Update()
 
 	if (m_pCubeMan)
 	{
-		m_pCubeMan->Update();
+		m_pCubeMan->Update(m_pMap);
 	}
 	if (m_pCamera)
 	{
@@ -102,7 +107,8 @@ void cMainGame::Render()
 	Draw_Triangle();*/
 
 	//Draw_Texture();
-	Draw_Obj();
+	//Draw_Obj();
+	Draw_Map();
 
 	g_pD3DDevice->EndScene();
 
@@ -242,4 +248,34 @@ void cMainGame::Draw_Obj()
 	{
 		p->Render();
 	}
+}
+
+void cMainGame::Setup_Map()
+{
+	cObjLoader loader;
+	loader.Load(m_vecMap, (char*)"obj", (char*)"map.obj");
+}
+
+void cMainGame::Draw_Map()
+{
+	D3DXMATRIXA16 matWorld, matS, matR;
+	D3DXMatrixScaling(&matS, 0.01f, 0.01f, 0.01f);
+	D3DXMatrixRotationX(&matR, -D3DX_PI / 2.0f);
+	matWorld = matS * matR;
+
+	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+	for (auto p : m_vecMap)
+	{
+		p->Render();
+	}
+}
+
+void cMainGame::Setup_Surface()
+{
+	D3DXMATRIXA16 matWorld, matS, matR;
+	D3DXMatrixScaling(&matS, 0.01f, 0.01f, 0.01f);
+	D3DXMatrixRotationX(&matR, -D3DX_PI / 2.0f);
+	matWorld = matS * matR;
+
+	m_pMap = new cObjMap((char*)"obj", (char*)"map_surface.obj", &matWorld);
 }

@@ -32,6 +32,10 @@ public:
 	void Setup_Obj();
 	void Draw_Obj();
 
+	void Setup_Map();
+	void Draw_Map();
+	void Setup_Surface();
+
 private:
 	std::vector<ST_PC_VERTEX> m_vecLineVertex;
 	std::vector<ST_PC_VERTEX> m_vecTriangleVertex;
@@ -41,9 +45,12 @@ private:
 	cCamera* m_pCamera;
 	cCubeMan* m_pCubeMan;
 	std::vector<cGroup*> m_vecGroup;
+	std::vector<cGroup*> m_vecMap;
 	//
 	LPDIRECT3DTEXTURE9 m_pTexture;
 	std::vector<ST_PT_VERTEX> m_vecVertex;
 	//
+
+	iMap* m_pMap;
 };
 

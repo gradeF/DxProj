@@ -2,7 +2,6 @@
 #include "cCharacter.h"
 
 class cCubeNode;
-
 class cCubeMan :
     public cCharacter
 {
@@ -12,7 +11,7 @@ public:
 
 public:
     virtual void Setup() override;
-    virtual void Update() override;
+    virtual void Update(iMap* pMap) override;
     virtual void Render() override;
 protected:
     cCubeNode* m_pRoot;
