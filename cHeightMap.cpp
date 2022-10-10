@@ -47,12 +47,12 @@ void cHeightMap::Setup(char* szFolder, char* szRaw, char* szTex, DWORD dwBytePer
 		v.n = D3DXVECTOR3(0, 1, 0);
 		v.t = D3DXVECTOR2((i % nCol) / (float)nCol, (i / nCol) / (float)nCol);
 
-vecVertex[i] = v;
-m_vecVertex[i] = v.p;
-if (dwBytePerPixel == 3)
-{
-	fgetc(fp); fgetc(fp);
-}
+		vecVertex[i] = v;
+		m_vecVertex[i] = v.p;
+		if (dwBytePerPixel == 3)
+		{
+			fgetc(fp); fgetc(fp);
+		}
 	}
 	fclose(fp);
 
@@ -86,35 +86,35 @@ if (dwBytePerPixel == 3)
 
 			vecIndex.push_back(_0); vecIndex.push_back(_1); vecIndex.push_back(_2);
 			vecIndex.push_back(_3); vecIndex.push_back(_2); vecIndex.push_back(_1);
-
-			D3DXCreateMeshFVF(vecIndex.size() / 3, vecVertex.size(), D3DXMESH_MANAGED | D3DXMESH_32BIT,
-				ST_PNT_VERTEX::FVF, g_pD3DDevice, &m_pMesh);
-
-			ST_PNT_VERTEX* pV = NULL;
-			m_pMesh->LockVertexBuffer(0, (LPVOID*)&pV);
-			memcpy(pV, &vecVertex[0], vecVertex.size() * sizeof(ST_PNT_VERTEX));
-			m_pMesh->UnlockVertexBuffer();
-
-			DWORD* pI = NULL;
-			m_pMesh->LockIndexBuffer(0, (LPVOID*)&pI);
-			memcpy(pI, &vecIndex[0], vecIndex.size() * sizeof(DWORD));
-			m_pMesh->UnlockIndexBuffer();
-
-			DWORD* pA = NULL;
-			m_pMesh->LockAttributeBuffer(0, &pA);
-			ZeroMemory(pA, (vecIndex.size() / 3) * sizeof(DWORD));
-			m_pMesh->UnlockAttributeBuffer();
-
-			std::vector<DWORD> vecAdj(vecIndex.size());
-			m_pMesh->GenerateAdjacency(0.0f, &vecAdj[0]);
-			m_pMesh->OptimizeInplace(D3DXMESHOPT_ATTRSORT | D3DXMESHOPT_COMPACT | D3DXMESHOPT_VERTEXCACHE,
-				&vecAdj[0], 0, 0, 0);
-			ZeroMemory(&m_stMtl, sizeof(D3DMATERIAL9));
-			m_stMtl.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-			m_stMtl.Diffuse = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
-			m_stMtl.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
 		}
 	}
+
+	D3DXCreateMeshFVF(vecIndex.size() / 3, vecVertex.size(), D3DXMESH_MANAGED | D3DXMESH_32BIT,
+		ST_PNT_VERTEX::FVF, g_pD3DDevice, &m_pMesh);
+
+	ST_PNT_VERTEX* pV = NULL;
+	m_pMesh->LockVertexBuffer(0, (LPVOID*)&pV);
+	memcpy(pV, &vecVertex[0], vecVertex.size() * sizeof(ST_PNT_VERTEX));
+	m_pMesh->UnlockVertexBuffer();
+
+	DWORD* pI = NULL;
+	m_pMesh->LockIndexBuffer(0, (LPVOID*)&pI);
+	memcpy(pI, &vecIndex[0], vecIndex.size() * sizeof(DWORD));
+	m_pMesh->UnlockIndexBuffer();
+
+	DWORD* pA = NULL;
+	m_pMesh->LockAttributeBuffer(0, &pA);
+	ZeroMemory(pA, (vecIndex.size() / 3) * sizeof(DWORD));
+	m_pMesh->UnlockAttributeBuffer();
+
+	std::vector<DWORD> vecAdj(vecIndex.size());
+	m_pMesh->GenerateAdjacency(0.0f, &vecAdj[0]);
+	m_pMesh->OptimizeInplace(D3DXMESHOPT_ATTRSORT | D3DXMESHOPT_COMPACT | D3DXMESHOPT_VERTEXCACHE,
+		&vecAdj[0], 0, 0, 0);
+	ZeroMemory(&m_stMtl, sizeof(D3DMATERIAL9));
+	m_stMtl.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
+	m_stMtl.Diffuse = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
+	m_stMtl.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
 }
 
 void cHeightMap::Render()

@@ -8,6 +8,7 @@
 #include "cObjLoader.h"
 #include "cGroup.h"
 #include "cObjMap.h"
+#include "cHeightMap.h"
 
 cMainGame::cMainGame()
 	:
@@ -64,6 +65,8 @@ void cMainGame::Setup()
 	Setup_Map();
 	Setup_Surface();
 
+	Setup_HeightMap();
+
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
 }
 
@@ -95,6 +98,12 @@ void cMainGame::Render()
 	{
 		m_pGrid->Render();
 	}
+
+	if (m_pMap)
+	{
+		m_pMap->Render();
+	}
+
 	if (m_pCubeMan)
 	{
 		m_pCubeMan->Render();
@@ -108,7 +117,8 @@ void cMainGame::Render()
 
 	//Draw_Texture();
 	//Draw_Obj();
-	Draw_Map();
+	//Draw_Map();
+	Draw_heightMap();
 
 	g_pD3DDevice->EndScene();
 
@@ -272,10 +282,26 @@ void cMainGame::Draw_Map()
 
 void cMainGame::Setup_Surface()
 {
-	D3DXMATRIXA16 matWorld, matS, matR;
-	D3DXMatrixScaling(&matS, 0.01f, 0.01f, 0.01f);
-	D3DXMatrixRotationX(&matR, -D3DX_PI / 2.0f);
-	matWorld = matS * matR;
+	//D3DXMATRIXA16 matWorld, matS, matR;
+	//D3DXMatrixScaling(&matS, 0.01f, 0.01f, 0.01f);
+	//D3DXMatrixRotationX(&matR, -D3DX_PI / 2.0f);
+	//matWorld = matS * matR;
 
-	m_pMap = new cObjMap((char*)"obj", (char*)"map_surface.obj", &matWorld);
+	//m_pMap = new cObjMap((char*)"obj", (char*)"map_surface.obj", &matWorld);
+}
+
+void cMainGame::Setup_HeightMap()
+{
+	cHeightMap* pMap = new cHeightMap;
+
+	pMap->Setup((char*)"HeightMapData/", (char*)"HeightMap.raw", (char*)"terrain.jpg");
+	m_pMap = pMap;
+}
+
+void cMainGame::Draw_heightMap()
+{
+	if (m_pMap)
+	{
+		m_pMap->Render();
+	}
 }
