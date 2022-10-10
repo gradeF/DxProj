@@ -47,12 +47,12 @@ void cHeightMap::Setup(char* szFolder, char* szRaw, char* szTex, DWORD dwBytePer
 		v.n = D3DXVECTOR3(0, 1, 0);
 		v.t = D3DXVECTOR2((i % nCol) / (float)nCol, (i / nCol) / (float)nCol);
 
-		vecVertex[i] = v;
-		m_vecVertex[i] = v.p;
-		if (dwBytePerPixel == 3)
-		{
-			fgetc(fp); fgetc(fp);
-		}
+vecVertex[i] = v;
+m_vecVertex[i] = v.p;
+if (dwBytePerPixel == 3)
+{
+	fgetc(fp); fgetc(fp);
+}
 	}
 	fclose(fp);
 
@@ -100,17 +100,71 @@ void cHeightMap::Setup(char* szFolder, char* szRaw, char* szTex, DWORD dwBytePer
 			memcpy(pI, &vecIndex[0], vecIndex.size() * sizeof(DWORD));
 			m_pMesh->UnlockIndexBuffer();
 
+			DWORD* pA = NULL;
+			m_pMesh->LockAttributeBuffer(0, &pA);
+			ZeroMemory(pA, (vecIndex.size() / 3) * sizeof(DWORD));
+			m_pMesh->UnlockAttributeBuffer();
+
+			std::vector<DWORD> vecAdj(vecIndex.size());
+			m_pMesh->GenerateAdjacency(0.0f, &vecAdj[0]);
+			m_pMesh->OptimizeInplace(D3DXMESHOPT_ATTRSORT | D3DXMESHOPT_COMPACT | D3DXMESHOPT_VERTEXCACHE,
+				&vecAdj[0], 0, 0, 0);
+			ZeroMemory(&m_stMtl, sizeof(D3DMATERIAL9));
+			m_stMtl.Ambient = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
+			m_stMtl.Diffuse = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
+			m_stMtl.Specular = D3DXCOLOR(0.8f, 0.8f, 0.8f, 1.0f);
 		}
 	}
 }
 
 void cHeightMap::Render()
 {
+	D3DXMATRIXA16 matWorld;
+	D3DXMatrixIdentity(&matWorld);
+	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+	g_pD3DDevice->SetMaterial(&m_stMtl);
+	g_pD3DDevice->SetTexture(0, m_pTexture);
+	m_pMesh->DrawSubset(0);
 }
 
 bool cHeightMap::GetHeight(IN float x, OUT float& y, IN float z)
 {
-	return false;
+	if (x < 0.f || z < 0.f || x >= m_nTileN || z >= m_nTileN)
+	{
+		y = 0;
+		return false;
+	}
+
+	int nX = x;
+	int nZ = z;
+
+	float fDeltaX = x - nX;
+	float fDeltaZ = z - nZ;
+
+	int _0 = (nZ + 0) * (m_nTileN + 1) + nX + 0;
+	int _1 = (nZ + 1) * (m_nTileN + 1) + nX + 0;
+	int _2 = (nZ + 0) * (m_nTileN + 1) + nX + 1;
+	int _3 = (nZ + 1) * (m_nTileN + 1) + nX + 1;
+
+	if ((fDeltaX + fDeltaZ) < 1.0f)
+	{
+		D3DXVECTOR3 v01 = m_vecVertex[_1] - m_vecVertex[_0];
+		D3DXVECTOR3 v02 = m_vecVertex[_2] - m_vecVertex[_0];
+		y = m_vecVertex[_0].y + (v01 * fDeltaZ + v02 * fDeltaX).y;
+		return true;
+	}
+	else
+	{
+		fDeltaX = 1.0f - fDeltaX;
+		fDeltaZ = 1.0f - fDeltaZ;
+
+		D3DXVECTOR3 v31 = m_vecVertex[_1] - m_vecVertex[_3];
+		D3DXVECTOR3 v32 = m_vecVertex[_2] - m_vecVertex[_3];
+		y = m_vecVertex[_3].y + (v31 * fDeltaZ + v32 * fDeltaX).y;
+		return true;
+	}
+
+	return true;
 }
 
 void cHeightMap::Destroy()
