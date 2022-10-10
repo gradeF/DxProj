@@ -66,7 +66,40 @@ void cHeightMap::Setup(char* szFolder, char* szRaw, char* szTex, DWORD dwBytePer
 			int down = (z - 1) * nCol + x + 0;
 
 			D3DXVECTOR3 leftToRight = m_vecVertex[right] - m_vecVertex[left];
-			D3DXVECTOR3 donwToup = m_vecVertex[up] - m_vecVertex[down];
+			D3DXVECTOR3 downToup = m_vecVertex[up] - m_vecVertex[down];
+			D3DXVECTOR3 normal;
+			D3DXVec3Cross(&normal, &downToup, &leftToRight);
+			D3DXVec3Normalize(&normal, &normal);
+			int nIndex = z * nCol + x;
+			vecVertex[nIndex].n = normal;
+
+		}
+	}
+	for (int x = 0; x < nTileN; x++)
+	{
+		for (int z = 0; z < nTileN; z++)
+		{
+			int _0 = (z + 0) * nCol + x + 0;
+			int _1 = (z + 1) * nCol + x + 0;
+			int _2 = (z + 0) * nCol + x + 1;
+			int _3 = (z + 1) * nCol + x + 1;
+
+			vecIndex.push_back(_0); vecIndex.push_back(_1); vecIndex.push_back(_2);
+			vecIndex.push_back(_3); vecIndex.push_back(_2); vecIndex.push_back(_1);
+
+			D3DXCreateMeshFVF(vecIndex.size() / 3, vecVertex.size(), D3DXMESH_MANAGED | D3DXMESH_32BIT,
+				ST_PNT_VERTEX::FVF, g_pD3DDevice, &m_pMesh);
+
+			ST_PNT_VERTEX* pV = NULL;
+			m_pMesh->LockVertexBuffer(0, (LPVOID*)&pV);
+			memcpy(pV, &vecVertex[0], vecVertex.size() * sizeof(ST_PNT_VERTEX));
+			m_pMesh->UnlockVertexBuffer();
+
+			DWORD* pI = NULL;
+			m_pMesh->LockIndexBuffer(0, (LPVOID*)&pI);
+			memcpy(pI, &vecIndex[0], vecIndex.size() * sizeof(DWORD));
+			m_pMesh->UnlockIndexBuffer();
+
 		}
 	}
 }
