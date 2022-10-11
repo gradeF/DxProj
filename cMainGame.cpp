@@ -38,6 +38,13 @@ cMainGame::~cMainGame()
 		Safe_release(p);
 	}
 	m_vecGroup.clear();
+
+	for (auto p : m_vecCullingSphere)
+	{
+		Safe_Delete(p);
+	}
+	m_vecCullingSphere.clear();
+
 	g_pObjectManager->Destroy();
 	g_pTextureManager->Destroy();
 	g_pDeviceManager->Destroy();
