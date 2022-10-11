@@ -4,6 +4,7 @@ class cGrid;
 class cCamera;
 class cCubeMan;
 class cGroup;
+class cFrustum;
 
 class cMainGame
 {
@@ -39,6 +40,9 @@ public:
 
 	void Setup_HeightMap();
 	void Draw_heightMap();
+
+	void Setup_Frustum();
+	void Draw_Frustum();
 private:
 	std::vector<ST_PC_VERTEX> m_vecLineVertex;
 	std::vector<ST_PC_VERTEX> m_vecTriangleVertex;
@@ -55,5 +59,11 @@ private:
 	//
 
 	iMap* m_pMap;
+	
+	//frustum culling
+	std::vector<ST_SPHERE*> m_vecCullingSphere;
+	LPD3DXMESH m_pSphere;
+	D3DMATERIAL9 m_stCullingMtl;
+	cFrustum* m_pFrustum;
 };
 

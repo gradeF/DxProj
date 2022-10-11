@@ -9,6 +9,7 @@
 #include "cGroup.h"
 #include "cObjMap.h"
 #include "cHeightMap.h"
+#include "cFrustum.h"
 
 cMainGame::cMainGame()
 	:
@@ -17,7 +18,8 @@ cMainGame::cMainGame()
 	m_pCamera(NULL),
 	m_pCubeMan(NULL),
 	m_pTexture(NULL),
-	m_pMap(NULL)
+	m_pMap(NULL),
+	m_pFrustum(NULL)
 {
 }
 
@@ -29,6 +31,7 @@ cMainGame::~cMainGame()
 	Safe_Delete(m_pCubeMan);
 	Safe_release(m_pTexture);
 	Safe_Delete(m_pMap);
+	Safe_Delete(m_pFrustum);
 
 	for (auto p : m_vecGroup)
 	{
@@ -67,6 +70,8 @@ void cMainGame::Setup()
 
 	Setup_HeightMap();
 
+	Setup_Frustum();
+
 	g_pD3DDevice->SetRenderState(D3DRS_LIGHTING, false);
 }
 
@@ -85,6 +90,10 @@ void cMainGame::Update()
 	{
 		m_pCamera->Update();
 	}
+	if (m_pFrustum)
+	{
+		m_pFrustum->Update();
+	}
 }
 
 void cMainGame::Render()
@@ -99,7 +108,7 @@ void cMainGame::Render()
 		m_pGrid->Render();
 	}
 
-	if (m_pMap)
+	/*if (m_pMap)
 	{
 		m_pMap->Render();
 	}
@@ -107,7 +116,7 @@ void cMainGame::Render()
 	if (m_pCubeMan)
 	{
 		m_pCubeMan->Render();
-	}
+	}*/
 	/*if (m_pCubePC)
 	{
 		m_pCubePC->Render();
@@ -118,7 +127,9 @@ void cMainGame::Render()
 	//Draw_Texture();
 	//Draw_Obj();
 	//Draw_Map();
-	Draw_heightMap();
+	//Draw_heightMap();
+
+	Draw_Frustum();
 
 	g_pD3DDevice->EndScene();
 
@@ -303,5 +314,55 @@ void cMainGame::Draw_heightMap()
 	if (m_pMap)
 	{
 		m_pMap->Render();
+	}
+}
+
+void cMainGame::Setup_Frustum()
+{
+	D3DXCreateSphere(g_pD3DDevice, 0.5f, 10, 10, &m_pSphere, NULL);
+
+	for (int x = -20; x <= 20; x++)
+	{
+		for (int y = -20; y <= 20; y++)
+		{
+			for (int z = -20; z <= 20; z++)
+			{
+				ST_SPHERE* s = new ST_SPHERE;
+				s->fRadius = 0.5f;
+				s->vCenter = D3DXVECTOR3((float)x, (float)y, (float)z);
+				s->isPicked = true;
+				m_vecCullingSphere.push_back(s);
+			}
+		}
+	}
+	ZeroMemory(&m_stCullingMtl, sizeof(D3DMATERIAL9));
+	m_stCullingMtl.Ambient = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
+	m_stCullingMtl.Diffuse = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
+	m_stCullingMtl.Specular = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f);
+
+	m_pFrustum = new cFrustum;
+	m_pFrustum->Setup();
+	
+}
+
+void cMainGame::Draw_Frustum()
+{
+	D3DXMATRIXA16 matWorld;
+	D3DXMatrixIdentity(&matWorld);
+	g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+
+	for (ST_SPHERE* sphere : m_vecCullingSphere)
+	{
+		if (sphere->isPicked)
+		{
+			D3DXMatrixIdentity(&matWorld);
+			matWorld._41 = sphere->vCenter.x;
+			matWorld._42 = sphere->vCenter.y;
+			matWorld._43 = sphere->vCenter.z;
+
+			g_pD3DDevice->SetTransform(D3DTS_WORLD, &matWorld);
+			g_pD3DDevice->SetMaterial(&m_stCullingMtl);
+			m_pSphere->DrawSubset(0);
+		}
 	}
 }
