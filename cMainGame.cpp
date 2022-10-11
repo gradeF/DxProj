@@ -108,7 +108,7 @@ void cMainGame::Render()
 		m_pGrid->Render();
 	}
 
-	/*if (m_pMap)
+	if (m_pMap)
 	{
 		m_pMap->Render();
 	}
@@ -116,7 +116,7 @@ void cMainGame::Render()
 	if (m_pCubeMan)
 	{
 		m_pCubeMan->Render();
-	}*/
+	}
 	/*if (m_pCubePC)
 	{
 		m_pCubePC->Render();
@@ -184,6 +184,24 @@ void cMainGame::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if (m_pCamera)
 	{
 		m_pCamera->WndPRco(hWnd, message, wParam, lParam);
+	}
+	switch (message)
+	{
+	case WM_RBUTTONDOWN:
+		{
+			for (ST_SPHERE* sphere : m_vecCullingSphere)
+			{
+				if (m_pFrustum->IsIn(sphere))
+				{
+					sphere->isPicked = true;
+				}
+				else
+				{
+					sphere->isPicked = false;
+				}
+			}
+		}
+		break;
 	}
 }
 
