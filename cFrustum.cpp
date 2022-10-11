@@ -36,9 +36,34 @@ void cFrustum::Update()
 	{
 		D3DXVec3Unproject(&m_vecWorldVertex[i], &m_vecProjVertex[i], NULL, &matProj, &matView, NULL);
 	}
+
+	// front -near
+	D3DXPlaneFromPoints(&m_vecPlane[0], &m_vecWorldVertex[0], &m_vecWorldVertex[1], &m_vecWorldVertex[2]);
+
+	// rear - far
+	D3DXPlaneFromPoints(&m_vecPlane[1], &m_vecWorldVertex[6], &m_vecWorldVertex[5], &m_vecWorldVertex[4]);
+
+	// top
+	D3DXPlaneFromPoints(&m_vecPlane[2], &m_vecWorldVertex[1], &m_vecWorldVertex[5], &m_vecWorldVertex[6]);
+
+	//bottom
+	D3DXPlaneFromPoints(&m_vecPlane[3], &m_vecWorldVertex[0], &m_vecWorldVertex[3], &m_vecWorldVertex[7]);
+
+	//left
+	D3DXPlaneFromPoints(&m_vecPlane[4], &m_vecWorldVertex[1], &m_vecWorldVertex[0], &m_vecWorldVertex[4]);
+
+	//right
+	D3DXPlaneFromPoints(&m_vecPlane[5], &m_vecWorldVertex[2], &m_vecWorldVertex[6], &m_vecWorldVertex[7]);
 }
 
 bool cFrustum::IsIn(ST_SPHERE* pSphere)
 {
-	return false;
+	for (D3DXPLANE p : m_vecPlane)
+	{
+		if(D3DXPlaneDotCoord(&p, &pSphere->vCenter) > pSphere->fRadius)
+		{
+			return false;
+		}
+	}
+	return true;
 }
