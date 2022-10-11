@@ -147,6 +147,7 @@
     <ClInclude Include="cCubePC.h" />
     <ClInclude Include="cCubePNT.h" />
     <ClInclude Include="cDeviceManager.h" />
+    <ClInclude Include="cFrustum.h" />
     <ClInclude Include="cGizmo.h" />
     <ClInclude Include="cGrid.h" />
     <ClInclude Include="cGroup.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="cCubePC.cpp" />
     <ClCompile Include="cCubePNT.cpp" />
     <ClCompile Include="cDeviceManager.cpp" />
+    <ClCompile Include="cFrustum.cpp" />
     <ClCompile Include="cGizmo.cpp" />
     <ClCompile Include="cGrid.cpp" />
     <ClCompile Include="cGroup.cpp" />

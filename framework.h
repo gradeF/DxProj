@@ -90,6 +90,15 @@ struct ST_PT_VERTEX
 	enum { FVF = D3DFVF_XYZ | D3DFVF_TEX1 };
 
 };
+
+struct ST_SPHERE
+{
+	float fRadius;
+	D3DXVECTOR3 vCenter;
+	bool isPicked;
+
+	ST_SPHERE() : fRadius(0.0f), vCenter(0, 0, 0) {}
+};
 #include "cDeviceManager.h"
 #include "cObject.h"
 #include "cObjectManager.h"

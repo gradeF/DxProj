@@ -31,6 +31,9 @@
     <Filter Include="HeightMap">
       <UniqueIdentifier>{92d321a3-d9ff-416e-bc92-c753a8cc5cce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Frustum">
+      <UniqueIdentifier>{4db771a2-3de1-428a-b0ee-19f57dd813c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -121,7 +124,10 @@
       <Filter>Map</Filter>
     </ClInclude>
     <ClInclude Include="cHeightMap.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="cFrustum.h">
+      <Filter>Frustum</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -204,7 +210,10 @@
       <Filter>Map</Filter>
     </ClCompile>
     <ClCompile Include="cHeightMap.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>HeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="cFrustum.cpp">
+      <Filter>Frustum</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
